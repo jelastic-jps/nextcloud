@@ -45,24 +45,22 @@ settings:
       markup:
 
 mixins:
- - https://raw.githubusercontent.com/sych74/nextcloud/master/configs/vers.yaml
- - /scripts/common.yml
+ - /configs/vers.yaml
 
 globals:
   isSingleDeploy: ${settings.isSingleDeploy:true}
-  DB_USER: ${settings.DB_USER:user-[fn.random]}
-  DB_PASS: ${settings.DB_PASS:[fn.password(10)]}
-  DB_HOST: 127.0.0.1
-  PROTOCOL: http
-  WP_ADMIN_PASS: ${settings.WP_ADMIN_PASS:[fn.password(10)]}
-  SUCCESS: default
+  db_user: ${settings.db_user:user-[fn.random]}
+  db_pass: ${settings.db_pass:[fn.password(10)]}
+  db_host: ${settings.db_host:127.0.0.1}
+  nc_admin_pass: ${settings.nc_admin_pass:[fn.password(10)]}
+  protocol: ${settings.db_host:http}
+  success: default
 
 onInstall:
   - addLimits
   - addMetadata
   - initLEsettings  
-  - setupNode:
-      nodeId: cp
+  - setupNode
   - if (${globals.isSingleDeploy}):
     - setProtocol
     - setDomain            
@@ -76,8 +74,8 @@ onInstall:
     - if ('${settings.success_email}' != 'false'):
       - return:
           type: success
-          message: /success/text/success-${globals.SUCCESS}.md?_r=${fn.random}
-          email: /success/email/success-${nodes.cp.master.nodeType}-${globals.SUCCESS}.md?_r=${fn.random}
+          message: /success/text/success-${globals.success}.md?_r=${fn.random}
+          email: /success/email/success-${nodes.cp.master.nodeType}-${globals.success}.md?_r=${fn.random}
 
 actions:
   addLimits:
@@ -93,7 +91,7 @@ actions:
         api.env.control.ApplyEnvProperty('${env.name}', session, metadata) :
         api.env.control.ApplyNodeGroupData('${env.name}', session, 'cp', metadata);
 
-  setProtocol:
+  setupProtocol:
     - script: |
         return {
           result:0,
@@ -101,13 +99,13 @@ actions:
         }
     - if (${response.ssl} || ${settings.le-addon:false}):
         setGlobals:
-          PROTOCOL: https
+          protocol: https
 
-  setDomain:
-    - script: ${globals.WP_CLUSTER_PATH}/scripts/idna.js
+  setupDomain:
+    - script: https://raw.githubusercontent.com/jelastic-jps/common/main/idna.js
       domains: ${env.domain}
     - setGlobals:
-        DOMAIN: ${response.domains} 
+        domain: ${response.domains} 
 
   installLEaddon:
     - install: https://github.com/jelastic-jps/lets-encrypt/blob/master/manifest.jps?_r=${fn.random}
@@ -117,23 +115,13 @@ actions:
         test: false
         skipEmail: true
         fallbackToX1: true
-        withExtIp: ${globals.isExtIP}
 
   initLEsettings:
-    - script: |
-        return {
-          result:0,
-          extIP: Boolean(jelastic.billing.account.GetQuotas('environment.externalip.enabled').array[0].value)
-        }
-    - setGlobals:
-        isExtIP: ${response.extIP}
-
     - cmd[cp]: |-
         [ ! -d /var/lib/jelastic/keys/letsencrypt ] && mkdir -p /var/lib/jelastic/keys/letsencrypt;
         echo "webroot=true" > /var/lib/jelastic/keys/letsencrypt/settings-custom;
         echo "webrootPath=/var/www/webroot/ROOT" >> /var/lib/jelastic/keys/letsencrypt/settings-custom;
         echo "test=false" >> /var/lib/jelastic/keys/letsencrypt/settings-custom;
-        echo "withExtIp=${globals.isExtIP}" >> /var/lib/jelastic/keys/letsencrypt/settings-custom;
       user: root
 
   setupLEdomain:
@@ -141,8 +129,8 @@ actions:
         source /opt/letsencrypt/settings;
         bash ~/bin/setupWP.sh --url https://${domain};
   
-  installNextcloud:
-    - install: scripts/installWP.jps
+  installNC:
+    - install: scripts/installNC.jps
       settings:
         db_host: ${globals.DB_HOST}
         db_user: ${globals.DB_USER}
