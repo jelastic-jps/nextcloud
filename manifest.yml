@@ -12,8 +12,8 @@ description:
 
 baseUrl: https://raw.githubusercontent.com/sych74/nextcloud/master
 
-onBeforeInit: /scripts/beforeInit.js?_r=${fn.random}
-onBeforeInstall: /scripts/beforeInstall.js?_r=${fn.random}
+onBeforeInit: /scripts/onBeforeInit?_r=${fn.random}
+onBeforeInstall: /scripts/onBeforeInstall.js?_r=${fn.random}
 nodes: definedInOnBeforeInstall
 
 skipNodeEmails: true
