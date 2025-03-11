@@ -153,7 +153,7 @@ actions:
     - cmd [cp]: |-
         wget https://raw.githubusercontent.com/jelastic-jps/mysql-cluster/master/scripts/setupUser.sh -O ~/setupUser.sh >> /var/log/run.log;
         bash ~/setupUser.sh ${globals.db_user} ${globals.db_pass} >> /var/log/run.log;
-        jem passwd set -p ${globals.DB_PASS} >> /var/log/run.log;
+        jem passwd set -p ${globals.db_pass} >> /var/log/run.log;
       user: root
 
 startPage: ${env.url}
