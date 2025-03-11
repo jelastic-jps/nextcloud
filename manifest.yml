@@ -69,8 +69,6 @@ onInstall:
     - if (${settings.le-addon:false}): 
       - installLEaddon
       - setupLEdomain
-    - install: 
-      - jps: /scripts/events.jps?_r=${fn.random}
     - if ('${settings.success_email}' != 'false'):
       - return:
           type: success
@@ -130,16 +128,16 @@ actions:
         bash ~/bin/setupWP.sh --url https://${domain};
   
   installNC:
-    - install: scripts/installNC.jps
+    - install: scripts/installApp.jps
       settings:
-        db_host: ${globals.DB_HOST}
-        db_user: ${globals.DB_USER}
-        db_pass: ${globals.DB_PASS}
+        db_host: ${globals.db_host}
+        db_user: ${globals.db_user}
+        db_pass: ${globals.db_pass}
         redis_host: /var/run/redis/redis.sock
         redis_port: 0
-        wp_admin_pass: ${globals.WP_ADMIN_PASS}
+        nc_admin_pass: ${globals.nc_admin_pass}
         wp_title: "Hello World"
-        wp_url: ${globals.PROTOCOL}://${globals.DOMAIN}/
+        wp_url: ${globals.protocol}://${globals.domain}/
         cluster: false
 
   setupNode:
@@ -153,10 +151,9 @@ actions:
   createUserDB:
     - log: Create user for DataBase
     - cmd [cp]: |-
-        wget ${baseUrl}/configs/sqldb/wordpress.cnf -O /etc/mysql/conf.d/wordpress.cnf &>> /var/log/run.log;
-        wget https://raw.githubusercontent.com/jelastic-jps/mysql-cluster/master/scripts/setupUser.sh -O ~/setupUser.sh &>> /var/log/run.log;
-        bash ~/setupUser.sh ${globals.DB_USER} ${globals.DB_PASS} &>> /var/log/run.log;
-        jem passwd set -p ${globals.DB_PASS} &>> /var/log/run.log;
+        wget https://raw.githubusercontent.com/jelastic-jps/mysql-cluster/master/scripts/setupUser.sh -O ~/setupUser.sh >> /var/log/run.log;
+        bash ~/setupUser.sh ${globals.db_user} ${globals.db_pass} >> /var/log/run.log;
+        jem passwd set -p ${globals.DB_PASS} >> /var/log/run.log;
       user: root
 
 startPage: ${env.url}
