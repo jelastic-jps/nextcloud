@@ -62,8 +62,7 @@ onInstall:
   - initLEsettings  
   - setupNode
   - if (${globals.isSingleDeploy}):
-    - setProtocol
-    - setDomain            
+    - setupProtocol          
     - createUserDB
     - installNextcloud  
     - if (${settings.le-addon:false}): 
