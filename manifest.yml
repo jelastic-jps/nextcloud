@@ -60,11 +60,12 @@ onInstall:
   - addLimits
   - addMetadata
   - initLEsettings  
-  - setupNode
+
   - if (${globals.isSingleDeploy}):
+    - setupDomain
     - setupProtocol          
     - createUserDB
-    - installNextcloud  
+
     - if (${settings.le-addon:false}): 
       - installLEaddon
       - setupLEdomain
