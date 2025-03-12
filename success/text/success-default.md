@@ -1,10 +1,10 @@
-**WordPress environment**: [${globals.PROTOCOL}://${env.domain}/](${globals.PROTOCOL}://${env.domain}/)  
+**Nextcloud environment**: [${globals.protocol}://${env.domain}/](${globals.protocol}://${env.domain}/)  
 
 Use the following credentials to access the admin panel:   
 
-**Admin Panel**: [${globals.PROTOCOL}://${env.domain}/wp-admin/](${globals.PROTOCOL}://${env.domain}/wp-admin/)  
-**Login**: ${user.email}  
-**Password**: ${globals.WP_ADMIN_PASS}  
+**Admin Panel**: [${globals.protocol}://${env.domain}/](${globals.protocol}://${env.domain}/)  
+**Login**: admin  
+**Password**: ${globals.nc_admin_pass}  
 
 The instructions below can help you with further managing your WordPress:   
 
