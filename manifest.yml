@@ -79,6 +79,7 @@ globals:
   db_user: ${settings.db_user:user-[fn.random]}
   db_pass: ${settings.db_pass:[fn.password(10)]}
   db_host: ${settings.db_host:127.0.0.1}
+  db_name: nc_${fn.random}
   nc_admin_pass: ${settings.nc_admin_pass:[fn.password(10)]}
   protocol: ${settings.protocol:http}
   success: default
@@ -159,9 +160,9 @@ actions:
     - install: /scripts/installNextcloud.yml?_r=${fn.random}
       settings:
         db_host: ${globals.db_host}
-        db_name: ${globals.db_name:}
-        db_user: ${globals.db_user:}
-        db_pass: ${globals.db_pass:}
+        db_name: ${globals.db_name}
+        db_user: ${globals.db_user}
+        db_pass: ${globals.db_pass}
         redis_host: /var/run/redis/redis.sock
         redis_port: 0
         redis_user: test
@@ -172,14 +173,14 @@ actions:
   
   setupNode:
     - if (/llsmp/.test("${nodes.cp.nodeType}") || /litespeed/.test("${nodes.cp.nodeType}")):
-        cmd[${nodes.cp.master.id}]: |-
+        cmd[cp]: |-
           sed -i 's/^;extension=gd.so/extension=gd.so/' /usr/local/lsws/lsphp/etc/php.d/20-gd.ini;
 
     - if (/lemp/.test("${nodes.cp.nodeType}") || /nginxphp/.test("${nodes.cp.nodeType}")):
-        cmd[${nodes.cp.master.id}]: |-
+        cmd[cp]: |-
           echo test
     
-    - sudo jem service restart
+    - cmd[cp]: sudo jem service restart
         
   createUserDB:
     - log: Create user for DataBase
