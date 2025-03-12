@@ -72,7 +72,7 @@ settings:
 
 
 mixins:
-  - /configs/vers.yaml
+  - /configs/vers.yml
 
 globals:
   isSingleDeploy: ${settings.isSingleDeploy:true}
@@ -86,13 +86,14 @@ globals:
 onInstall:
   - addLimits
   - addMetadata
-  - initLEsettings  
+  - initLEsettings
+  - setupNode
 
   - if (${globals.isSingleDeploy}):
     - setupDomain
     - setupProtocol          
     - createUserDB
-
+    - installNextcloud
     - if (${settings.le-addon:false}): 
       - installLEaddon
       - setupLEdomain
@@ -163,8 +164,8 @@ actions:
         db_pass: ${globals.db_pass:}
         redis_host: /var/run/redis/redis.sock
         redis_port: 0
-        redis_user: 
-        redis_pswd: 
+        redis_user: test
+        redis_pswd: test
         nc_url: ${globals.protocol}://${env.domain}
         nc_admin_pass: ${globals.nc_admin_pass}
         version_nextcloud: ${globals.version_nextcloud}
@@ -172,11 +173,13 @@ actions:
   setupNode:
     - if (/llsmp/.test("${nodes.cp.nodeType}") || /litespeed/.test("${nodes.cp.nodeType}")):
         cmd[${nodes.cp.master.id}]: |-
-          echo test
+          sed -i 's/^;extension=gd.so/extension=gd.so/' /usr/local/lsws/lsphp/etc/php.d/20-gd.ini;
 
     - if (/lemp/.test("${nodes.cp.nodeType}") || /nginxphp/.test("${nodes.cp.nodeType}")):
         cmd[${nodes.cp.master.id}]: |-
           echo test
+    
+    - sudo jem service restart
         
   createUserDB:
     - log: Create user for DataBase
