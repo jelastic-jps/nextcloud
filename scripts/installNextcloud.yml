@@ -4,22 +4,22 @@ name: Nextcloud Server Installation
 description: Nextcloud Server Installation
 
 globals:
-  nc_admin_pass: abcABC123
-  db_host: 127.0.0.1
-  db_name: nc_${fn.random}
-  db_user: user-4848302
-  db_pass: pKoHUSstC3
-  REDIS_HOST: ${settings.redis_host:}
-  REDIS_PORT: ${settings.redis_port:}
-  REDIS_USER: ${settings.redis_user:}
-  REDIS_PSWD: ${settings.redis_pswd:}
-  WP_URL: ${settings.wp_url}
-  cluster: false
-  version_nextcloud: 31.0.0
+  db_host: ${settings.db_host:}
+  db_name: ${settings.db_name:}
+  db_user: ${settings.db_user:}
+  db_pass: ${settings.db_pass:}
+  redis_host: ${settings.redis_host:}
+  redis_port: ${settings.redis_port:} 
+  redis_user: ${settings.redis_user:}
+  redis_pswd: ${settings.redis_pswd:}
+  nc_url: ${settings.nc_url:}
+  nc_admin_pass: ${settings.nc_admin_pass:}
+  version_nextcloud: ${settings.version_nextcloud:}
 
 onInstall:
   - deployNextcloud
   - installNextcloud
+  - setupNextcloud
 
 actions:
   deployNextcloud:
@@ -38,14 +38,17 @@ actions:
     cmd[${nodes.cp.master.id}]: |-
       mysql -u${globals.db_user} -p${globals.db_pass} -h ${globals.db_host} -e "CREATE DATABASE IF NOT EXISTS ${globals.db_name};";
       cd /var/www/webroot/ROOT;
-      php occ maintenance:install \
-      --database 'mysql' \
-      --database-name '${globals.db_name}' \
-      --database-user '${globals.db_user}' \
-      --database-pass '${globals.db_pass}' \
-      --admin-user 'admin' \
-      --admin-pass '${globals.nc_admin_pass}';
+      php occ maintenance:install --database 'mysql' \
+        --database-host '${globals.db_host}' --database-name '${globals.db_name}' \
+        --database-user '${globals.db_user}' --database-pass '${globals.db_pass}' \
+        --admin-user 'admin' --admin-pass '${globals.nc_admin_pass}';
 
+  setupNextcloud:
+    cmd[${nodes.cp.master.id}]: |-
+      cd /var/www/webroot/ROOT;
+      php occ config:system:set overwrite.cli.url --value='${globals.nc_url}'
+      php occ config:system:set trusted_domains 2 --value='${env.domain}'
+      
   installScripts:
     - cmd[cp]: |-
         [ ! -d $HOME/bin ] && mkdir $HOME/bin;

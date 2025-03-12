@@ -12,7 +12,33 @@ description:
 
 baseUrl: https://raw.githubusercontent.com/sych74/nextcloud/master
 
-onBeforeInit: /scripts/onBeforeInit?_r=${fn.random}
+onBeforeInit: |
+    import com.hivext.api.Response;
+    import org.yaml.snakeyaml.Yaml;
+    import com.hivext.api.core.utils.Transport;
+
+    var lsAppid = "9e6afcf310004ac84060f90ff41a5aba";
+    var isLS = jelastic.dev.apps.GetApp(lsAppid);
+
+    var settings = jps.settings;
+    var fields = {};
+    for (var i = 0, field; field = jps.settings.fields[i]; i++)
+      fields[field.name] = field;
+
+    if (isLS.result == 0 || isLS.result == Response.PERMISSION_DENIED) {  
+      fields["ls-addon"].hidden = false;
+      fields["ls-addon"].value = true;
+    } else {
+      fields["ls-addon"].hidden = true;
+      fields["ls-addon"].value = false;
+      fields["ls-addon"].showIf = null;
+    }
+
+    return {
+        result: 0,
+        settings: settings
+    };
+
 onBeforeInstall: /scripts/onBeforeInstall.js?_r=${fn.random}
 nodes: definedInOnBeforeInstall
 
@@ -44,8 +70,9 @@ settings:
       hidden: true
       markup:
 
+
 mixins:
- - /configs/vers.yaml
+  - /configs/vers.yaml
 
 globals:
   isSingleDeploy: ${settings.isSingleDeploy:true}
@@ -53,7 +80,7 @@ globals:
   db_pass: ${settings.db_pass:[fn.password(10)]}
   db_host: ${settings.db_host:127.0.0.1}
   nc_admin_pass: ${settings.nc_admin_pass:[fn.password(10)]}
-  protocol: ${settings.db_host:http}
+  protocol: ${settings.protocol:http}
   success: default
 
 onInstall:
@@ -127,19 +154,21 @@ actions:
         source /opt/letsencrypt/settings;
         bash ~/bin/setupWP.sh --url https://${domain};
   
-  installNC:
-    - install: scripts/installApp.jps
+  installNextcloud:
+    - install: /scripts/installNextcloud.yml?_r=${fn.random}
       settings:
         db_host: ${globals.db_host}
-        db_user: ${globals.db_user}
-        db_pass: ${globals.db_pass}
-        redis_host: /var/run/redis/redis.sock
-        redis_port: 0
+        db_name: ${globals.db_name:}
+        db_user: ${globals.db_user:}
+        db_pass: ${globals.db_pass:}
+        redis_host: 
+        redis_port: 
+        redis_user: 
+        redis_pswd: 
+        nc_url: ${globals.protocol}://${domain}
         nc_admin_pass: ${globals.nc_admin_pass}
-        wp_title: "Hello World"
-        wp_url: ${globals.protocol}://${globals.domain}/
-        cluster: false
-
+        version_nextcloud: ${globals.version_nextcloud}
+  
   setupNode:
     - log: OPTIMIZATION
     - install: https://raw.githubusercontent.com/jelastic/templates/master/config_v2.jps?_r=${fn.random}
