@@ -161,21 +161,22 @@ actions:
         db_name: ${globals.db_name:}
         db_user: ${globals.db_user:}
         db_pass: ${globals.db_pass:}
-        redis_host: 
-        redis_port: 
+        redis_host: /var/run/redis/redis.sock
+        redis_port: 0
         redis_user: 
         redis_pswd: 
-        nc_url: ${globals.protocol}://${domain}
+        nc_url: ${globals.protocol}://${env.domain}
         nc_admin_pass: ${globals.nc_admin_pass}
         version_nextcloud: ${globals.version_nextcloud}
   
   setupNode:
-    - log: OPTIMIZATION
-    - install: https://raw.githubusercontent.com/jelastic/templates/master/config_v2.jps?_r=${fn.random}
-      settings:
-        targetGroup: cp
-        targetNodes: ${this.nodeId}
-        optimization: wordpress
+    - if (/llsmp/.test("${nodes.cp.nodeType}") || /litespeed/.test("${nodes.cp.nodeType}")):
+        cmd[${nodes.cp.master.id}]: |-
+          echo test
+
+    - if (/lemp/.test("${nodes.cp.nodeType}") || /nginxphp/.test("${nodes.cp.nodeType}")):
+        cmd[${nodes.cp.master.id}]: |-
+          echo test
         
   createUserDB:
     - log: Create user for DataBase
