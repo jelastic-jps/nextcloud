@@ -50,7 +50,7 @@ settings:
       type: displayfield
       markup:
  
-    - caption: Install LiteSpeed High-Performance Web Server
+    - caption: Install LiteSpeed High-Performance Web Server (Recommended)
       type: checkbox
       name: ls-addon
       value: true
@@ -165,8 +165,6 @@ actions:
         db_pass: ${globals.db_pass}
         redis_host: /var/run/redis/redis.sock
         redis_port: 0
-        redis_user: test
-        redis_pswd: test
         nc_url: ${globals.protocol}://${env.domain}
         nc_admin_pass: ${globals.nc_admin_pass}
         version_nextcloud: ${globals.version_nextcloud}
