@@ -5,7 +5,7 @@ categories:
   - apps/blogs
   - apps/content-management
 logo: https://raw.githubusercontent.com/sych74/nextcloud/master/images/logo-nextcloud.png
-homepage: http://nextcloud.com/
+homepage: https://nextcloud.com/
 description:
   text: Nextcloud Standalone with built-in kit for choosing optimal application servers and a set of advanced features for running a private cloud storage solution. Nextcloud deployed as a lightweight standalone container with minimal allocated resources for cost efficiency.
   short: Nextcloud Standalone with built-in kit for choosing optimal application servers and a set of advanced features for running a private cloud storage solution.
