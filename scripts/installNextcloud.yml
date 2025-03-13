@@ -48,46 +48,7 @@ actions:
       cd /var/www/webroot/ROOT;
       php occ config:system:set overwrite.cli.url --value='${globals.nc_url}'
       php occ config:system:set trusted_domains 2 --value='${env.domain}'
-      
-  installScripts:
-    - cmd[cp]: |-
-        [ ! -d $HOME/bin ] && mkdir $HOME/bin;
-        curl -o $HOME/bin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && chmod +x $HOME/bin/wp;
-        echo "apache_modules:" > ~/bin/wp-cli.yml;
-        echo "  - mod_rewrite" >> ~/bin/wp-cli.yml;
-        echo "export PATH=$PATH:$HOME/bin/" >> $HOME/.bash_profile;
-        wget ${baseUrl}/setupWP.sh?_r=${fn.random} -O ~/bin/setupWP.sh &>> /var/log/run.log;
-        echo $HOME/bin;
-    - cmd[cp]:
-        echo ${response.out} >>  /etc/jelastic/redeploy.conf;
-        yum install jq -y &>> /var/log/run.log;
-      user: root
-
-  setupWordPress:
-    - cmd[${nodes.cp.master.id}]: |-
-        grep -qE "(WP_AUTO_UPDATE_CORE)" /var/www/webroot/ROOT/wp-config.php || sed -i "/^\$table_prefix.*/a define( 'WP_AUTO_UPDATE_CORE', false );" /var/www/webroot/ROOT/wp-config.php;
-        cd ~/bin/ && wp option update permalink_structure '/%postname%/' --path=/var/www/webroot/ROOT;
-        cd ~/bin/ && wp rewrite structure '/%postname%/' --hard --path=/var/www/webroot/ROOT;
-        
-  installPlugins:
-    - if (/lemp/.test("${nodes.cp.nodeType}") || /nginxphp/.test("${nodes.cp.nodeType}")):
-        cmd[${nodes.cp.master.id}]: |-
-          wget ${baseUrl}../configs/wordpress/wp-jelastic.php -O /var/www/webroot/ROOT/wp-jelastic.php
-          mv /var/www/webroot/ROOT/wp-config.php /tmp; sed -i "s/.*'wp-settings.php';.*/require_once ABSPATH . 'wp-jelastic.php';\n&/" /tmp/wp-config.php; mv /tmp/wp-config.php /var/www/webroot/ROOT;
-          wp plugin install w3-total-cache --version=${globals.version_w3total} --activate --path=/var/www/webroot/ROOT &>> /var/log/run.log;
-          wp cache flush --path=/var/www/webroot/ROOT &>> /var/log/run.log;
-          wp plugin install nginx-cache --activate --path=/var/www/webroot/ROOT &>> /var/log/run.log;
-          wp cache flush --path=/var/www/webroot/ROOT &>> /var/log/run.log;
-          wp db query "INSERT INTO wp_options(option_name,option_value,autoload) VALUES('nginx_cache_path','/var/www/webroot/ROOT/.cache','yes');" --path=/var/www/webroot/ROOT &>> /var/log/run.log;
-          wp db query "INSERT INTO wp_options(option_name,option_value,autoload) VALUES('nginx_auto_purge',1,'yes');" --path=/var/www/webroot/ROOT &>> /var/log/run.log;
-          wp cache flush --path=/var/www/webroot/ROOT &>> /var/log/run.log;
-    
-    - if (/llsmp/.test("${nodes.cp.nodeType}") || /litespeed/.test("${nodes.cp.nodeType}")):
-        cmd[${nodes.cp.master.id}]: |-
-          wp plugin install litespeed-cache --version=${globals.version_lscache} --activate --path=/var/www/webroot/ROOT &>> /var/log/run.log;
-          wp cache flush --path=/var/www/webroot/ROOT &>> /var/log/run.log;
-    
-  setupPlugins:
-    - cmd[${nodes.cp.master.id}]: |-
-        bash ~/bin/setupWP.sh --pgcache true --objectcache true --REDIS_HOST ${globals.REDIS_HOST} --REDIS_PORT ${globals.REDIS_PORT} --REDIS_USER ${globals.REDIS_USER} --REDIS_PSWD ${globals.REDIS_PSWD};
-   
+      php occ config:system:set redis host --value='${globals.redis_host}'
+      php occ config:system:set redis port --value='${globals.redis_port}'
+      php occ config:system:set redis dbindex --value=0
+      php occ config:system:set redis timeout --value=1.5
