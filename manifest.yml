@@ -180,7 +180,7 @@ actions:
 
     - if (/lemp/.test("${nodes.cp.nodeType}") || /nginxphp/.test("${nodes.cp.nodeType}")):
         cmd[cp]: |-
-          echo test
+          wget --tries=10 -qO /etc/nginx/conf.d/sites-enabled/default.conf ${baseUrl}/configs/nginx.conf;
 
     - cmd[cp]: wget --tries=10 -qO /etc/mysql/conf.d/nextcloud.cnf ${baseUrl}/configs/mariadb.cnf;
     
