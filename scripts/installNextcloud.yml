@@ -52,3 +52,5 @@ actions:
       php occ config:system:set redis port --value='${globals.redis_port}'
       php occ config:system:set redis dbindex --value=0
       php occ config:system:set redis timeout --value=1.5
+      php occ config:system:set memcache.local --value="\OC\Memcache\Redis"
+      php occ config:system:set memcache.locking --value="\OC\Memcache\Redis"
