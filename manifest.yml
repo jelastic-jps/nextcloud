@@ -173,10 +173,14 @@ actions:
     - if (/llsmp/.test("${nodes.cp.nodeType}") || /litespeed/.test("${nodes.cp.nodeType}")):
         cmd[cp]: |-
           sed -i 's/^;extension=gd.so/extension=gd.so/' /usr/local/lsws/lsphp/etc/php.d/20-gd.ini;
+          sed -i 's/^;extension=intl.so/extension=intl.so/' /usr/local/lsws/lsphp/etc/php.d/20-intl.ini;
+          sed -i 's/^;extension=imagick.so/extension=imagick.so/' /usr/local/lsws/lsphp83/etc/php.d/40-imagick.ini;
 
     - if (/lemp/.test("${nodes.cp.nodeType}") || /nginxphp/.test("${nodes.cp.nodeType}")):
         cmd[cp]: |-
           echo test
+
+    - cmd[cp]: wget --tries=10 -qO /etc/mysql/conf.d/nextcloud.cnf ${baseUrl}/configs/mariadb.cnf;
     
     - cmd[cp]: sudo jem service restart
         
