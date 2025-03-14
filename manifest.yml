@@ -77,9 +77,9 @@ onAfterClone:
   - script: delete MANIFEST.id; return {result:0, jps:MANIFEST};
   - install: ${response.jps}
     envName: ${event.response.env.envName}
-      settings:
-        domain: ${event.response.env.domain}
-        clone: true
+    settings:
+      domain: ${event.response.env.domain}
+      clone: true
 
 mixins:
   - /configs/vers.yml
