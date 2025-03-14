@@ -71,6 +71,16 @@ settings:
       markup:
 
 
+onAfterInstallAddon [nodeGroup:cp, id:letsencrypt-ssl-addon]: setupLEdomain
+
+onAfterClone:
+  - script: delete MANIFEST.id; return {result:0, jps:MANIFEST};
+  - install: ${response.jps}
+    envName: ${event.response.env.envName}
+      settings:
+        domain: ${event.response.env.domain}
+        clone: true
+
 mixins:
   - /configs/vers.yml
 
@@ -85,23 +95,26 @@ globals:
   success: default
 
 onInstall:
-  - addLimits
-  - addMetadata
-  - initLEsettings
-  - setupNode
-  - if (${globals.isSingleDeploy}):
-    - setupDomain
-    - setupProtocol          
-    - createUserDB
-    - installNextcloud
-    - if (${settings.le-addon:false}): 
-      - installLEaddon
-      - setupLEdomain
-    - if ('${settings.success_email}' != 'false'):
-      - return:
-          type: success
-          message: /success/text/success-${globals.success}.md?_r=${fn.random}
-          email: /success/email/success-${nodes.cp.master.nodeType}-${globals.success}.md?_r=${fn.random}
+  - if (${settings.clone:false}): 
+    - setupDomain: ${settings.domain}
+  - else:
+    - addLimits
+    - addMetadata
+    - initLEsettings
+    - setupNode
+    - if (${globals.isSingleDeploy}):
+      - getDomain
+      - setupProtocol          
+      - createUserDB
+      - installNextcloud
+      - if (${settings.le-addon:false}): 
+        - installLEaddon
+        - setupLEdomain
+      - if ('${settings.success_email}' != 'false'):
+        - return:
+            type: success
+            message: /success/text/success-${globals.success}.md?_r=${fn.random}
+            email: /success/email/success-${nodes.cp.master.nodeType}-${globals.success}.md?_r=${fn.random}
 
 actions:
   addLimits:
@@ -127,7 +140,7 @@ actions:
         setGlobals:
           protocol: https
 
-  setupDomain:
+  getDomain:
     - script: https://raw.githubusercontent.com/jelastic-jps/common/main/idna.js
       domains: ${env.domain}
     - setGlobals:
@@ -149,6 +162,13 @@ actions:
         echo "webrootPath=/var/www/webroot/ROOT" >> /var/lib/jelastic/keys/letsencrypt/settings-custom;
         echo "test=false" >> /var/lib/jelastic/keys/letsencrypt/settings-custom;
       user: root
+
+  setupDomain:
+    - cmd[cp]: |-
+        cd /var/www/webroot/ROOT;
+        php occ config:system:set overwrite.cli.url --value='https://${this.domain}';
+        php occ config:system:set trusted_domains 2 --value='${this.domain}';
+        php occ occ maintenance:repair;
 
   setupLEdomain:
     - cmd[cp]: |-
