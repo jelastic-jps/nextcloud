@@ -164,16 +164,16 @@ actions:
   setupDomain:
     - cmd[cp]: |-
         cd /var/www/webroot/ROOT;
-        php occ config:system:set overwrite.cli.url --value='https://${this.domain}';
-        php occ config:system:set trusted_domains 2 --value='${this.domain}';
+        php occ config:system:set overwrite.cli.url --value="https://${this.domain}";
+        php occ config:system:set trusted_domains 2 --value="${this.domain}";
         php occ maintenance:repair;
 
   setupLEdomain:
     - cmd[cp]: |-
         source /opt/letsencrypt/settings;
         cd /var/www/webroot/ROOT;
-        php occ config:system:set overwrite.cli.url --value='https://${domain}';
-        php occ config:system:set trusted_domains 2 --value='${domain}';
+        php occ config:system:set overwrite.cli.url --value="https://${domain}";
+        php occ config:system:set trusted_domains 2 --value="${domain}";
         php occ maintenance:repair;
   
   installNextcloud:
