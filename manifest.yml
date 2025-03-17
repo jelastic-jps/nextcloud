@@ -166,7 +166,7 @@ actions:
         cd /var/www/webroot/ROOT;
         php occ config:system:set overwrite.cli.url --value='https://${this.domain}';
         php occ config:system:set trusted_domains 2 --value='${this.domain}';
-        php occ occ maintenance:repair;
+        php occ maintenance:repair;
 
   setupLEdomain:
     - cmd[cp]: |-
