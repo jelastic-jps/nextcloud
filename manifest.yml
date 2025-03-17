@@ -174,7 +174,7 @@ actions:
         cd /var/www/webroot/ROOT;
         php occ config:system:set overwrite.cli.url --value='https://${domain}';
         php occ config:system:set trusted_domains 2 --value='${domain}';
-        php occ occ maintenance:repair;
+        php occ maintenance:repair;
   
   installNextcloud:
     - install: /scripts/installNextcloud.yml?_r=${fn.random}
