@@ -52,12 +52,14 @@ The desktop client allows you to synchronize files between your local machine an
 
 2\. Run the client and log in to your Nextcloud server by providing the server URL and authenticating with your Nextcloud credentials.
 
-
+![Nextcloud client login](images/nextcloud-client-login.png)
 
 3\. Choose local folder and what to sync.
 
+![Nextcloud client sync](images/nextcloud-client-sync.png)
 
 Click **Connect** to start the synchronization process. Depending on the size of your files, this may take some time.
 
 4\. Nextcloud will be automatically integrated into your Finder with the sync status icons and additional actions in context menu (open in browser, share link, etc.). Even more management options are available from the Nextcloud client in the menu bar at the top.
 
+![Nextcloud client](images/nextcloud-client.png)
