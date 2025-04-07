@@ -4,7 +4,7 @@ name: Nextcloud
 categories:
   - apps/blogs
   - apps/content-management
-logo: images/logo.webp
+logo: images/nextcloud-logo.svg
 homepage: https://nextcloud.com/
 description:
   text: The Nextcloud package deploys a powerful file hosting and content collaboration platform on top of a single container. It provides a wide range of features (including file sharing, synchronization, and collaboration tools) available through a web interface and remote client applications. The Nextcloud package is a great choice for users who want to set up their own cloud storage solution.

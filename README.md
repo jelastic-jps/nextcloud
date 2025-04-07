@@ -1,5 +1,5 @@
 <p align="center"> 
-<img src="images/logo.webp" alt="Nextcloud">
+<img src="images/nextcloud-logo.svg" alt="Nextcloud">
 </p>
 
 # Nextcloud
