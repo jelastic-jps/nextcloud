@@ -1,16 +1,16 @@
 jpsType: install
 id: nextcloud
-name: Nextcloud Standalone Kit
+name: Nextcloud
 categories:
   - apps/blogs
   - apps/content-management
-logo: https://raw.githubusercontent.com/sych74/nextcloud/master/images/logo-nextcloud.png
+logo: images/logo.webp
 homepage: https://nextcloud.com/
 description:
-  text: Nextcloud Standalone with built-in kit for choosing optimal application servers and a set of advanced features for running a private cloud storage solution. Nextcloud deployed as a lightweight standalone container with minimal allocated resources for cost efficiency.
-  short: Nextcloud Standalone with built-in kit for choosing optimal application servers and a set of advanced features for running a private cloud storage solution.
+  text: The Nextcloud package deploys a powerful file hosting and content collaboration platform on top of a single container. It provides a wide range of features (including file sharing, synchronization, and collaboration tools) available through a web interface and remote client applications. The Nextcloud package is a great choice for users who want to set up their own cloud storage solution.
+  short: Nextcloud is a free and open-source file hosting solution that provides cloud storage, file synchronization, and collaboration features.
 
-baseUrl: https://raw.githubusercontent.com/sych74/nextcloud/master
+baseUrl: https://raw.githubusercontent.com/HlibAntonov/nextcloud/master
 
 onBeforeInit: |
     import com.hivext.api.Response;
