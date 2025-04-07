@@ -2,8 +2,9 @@ jpsType: install
 id: nextcloud
 name: Nextcloud
 categories:
-  - apps/blogs
-  - apps/content-management
+  - apps/file-management
+  - apps/popular
+  - apps/file-manager
 logo: images/nextcloud-logo.svg
 homepage: https://nextcloud.com/
 description:
