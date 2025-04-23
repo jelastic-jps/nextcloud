@@ -56,7 +56,7 @@ settings:
       name: ls-addon
       value: true
       disabled: false
-      tooltip: "If this option is disabled, the cluster will be installed using NGINX load balancer and application servers"
+      tooltip: "If this option is disabled, the application will be installed using NGINX application servers"
                  
     - caption: Install Let's Encrypt SSL with Auto-Renewal
       type: checkbox
