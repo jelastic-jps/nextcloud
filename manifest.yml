@@ -1,4 +1,5 @@
 jpsType: install
+jpsVersion: 8.3.1
 id: nextcloud
 name: Nextcloud
 categories:
