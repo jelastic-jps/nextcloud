@@ -8,10 +8,10 @@ globals:
   db_name: ${settings.db_name:}
   db_user: ${settings.db_user:}
   db_pass: ${settings.db_pass:}
-  redis_host: ${settings.redis_host:}
-  redis_port: ${settings.redis_port:} 
-  redis_user: ${settings.redis_user:}
-  redis_pswd: ${settings.redis_pswd:}
+  cache_host: ${settings.cache_host:}
+  cache_port: ${settings.cache_port:} 
+  cache_user: ${settings.cache_user:}
+  cache_pswd: ${settings.cache_pswd:}
   nc_url: ${settings.nc_url:}
   nc_admin_pass: ${settings.nc_admin_pass:}
   version_nextcloud: ${settings.version_nextcloud:}
@@ -48,9 +48,6 @@ actions:
       cd /var/www/webroot/ROOT;
       php occ config:system:set overwrite.cli.url --value='${globals.nc_url}'
       php occ config:system:set trusted_domains 2 --value='${env.domain}'
-      php occ config:system:set redis host --value='${globals.redis_host}'
-      php occ config:system:set redis port --value='${globals.redis_port}'
-      php occ config:system:set redis dbindex --value=0
-      php occ config:system:set redis timeout --value=1.5
-      php occ config:system:set memcache.local --value="\OC\Memcache\Redis"
-      php occ config:system:set memcache.locking --value="\OC\Memcache\Redis"
+      php occ config:system:set memcache.local --value="\OC\Memcache\Memcached"
+      php occ config:system:set memcache.locking --value="\OC\Memcache\Memcached"
+      php -r "require 'config/config.php'; \$CONFIG['memcache.local'] = '\\OC\\Memcache\\Memcached'; \$CONFIG['memcache.locking'] = '\\OC\\Memcache\\Memcached'; \$CONFIG['memcached_servers'] = [['${globals.cache_host}', (int)${globals.cache_port}]]; \$config = '<?php' . PHP_EOL . PHP_EOL . '\$CONFIG = ' . var_export(\$CONFIG, true) . ';'; file_put_contents('config/config.php', \$config);"

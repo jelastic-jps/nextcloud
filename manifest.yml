@@ -185,8 +185,8 @@ actions:
         db_name: ${globals.db_name}
         db_user: ${globals.db_user}
         db_pass: ${globals.db_pass}
-        redis_host: /var/run/redis/redis.sock
-        redis_port: 0
+        cache_host: /var/run/memcached/memcached.sock
+        cache_port: 0
         nc_url: ${globals.protocol}://${env.domain}
         nc_admin_pass: ${globals.nc_admin_pass}
         version_nextcloud: ${globals.version_nextcloud}
