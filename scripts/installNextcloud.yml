@@ -48,9 +48,6 @@ actions:
       cd /var/www/webroot/ROOT;
       php occ config:system:set overwrite.cli.url --value='${globals.nc_url}'
       php occ config:system:set trusted_domains 2 --value='${env.domain}'
-      php occ config:system:set redis host --value='${globals.redis_host}'
-      php occ config:system:set redis port --value='${globals.redis_port}'
-      php occ config:system:set redis dbindex --value=0
-      php occ config:system:set redis timeout --value=1.5
-      php occ config:system:set memcache.local --value="\OC\Memcache\Redis"
-      php occ config:system:set memcache.locking --value="\OC\Memcache\Redis"
+      php occ config:system:set memcache.local --value="\OC\Memcache\Memcached"
+      php occ config:system:set memcache.locking --value="\OC\Memcache\Memcached"
+      php -r "require 'config/config.php'; \$CONFIG['memcached_servers'] = [['${globals.cache_host}', ${globals.cache_port}]]; \$config = '<?php' . PHP_EOL . PHP_EOL . '\$CONFIG = ' . var_export(\$CONFIG, true) . ';'; file_put_contents('config/config.php', \$config);"

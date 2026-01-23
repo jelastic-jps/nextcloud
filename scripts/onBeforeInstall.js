@@ -16,7 +16,7 @@ if ('${settings.ls-addon:false}'== 'true') {
     displayName: "AppServer",
     env: {
       SERVER_WEBROOT: "/var/www/webroot/ROOT",
-      REDIS_ENABLED: "true",
+      CACHE_ENABLED: "true",
       WAF: "OFF",
       WP_PROTECT: "OFF"
     }
@@ -33,7 +33,7 @@ if ('${settings.ls-addon:false}'== 'true') {
     displayName: "AppServer",
     env: {
       SERVER_WEBROOT: "/var/www/webroot/ROOT",
-      REDIS_ENABLED: "true"
+      CACHE_ENABLED: "true"
     }
   })
 }
