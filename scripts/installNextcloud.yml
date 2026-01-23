@@ -50,4 +50,4 @@ actions:
       php occ config:system:set trusted_domains 2 --value='${env.domain}'
       php occ config:system:set memcache.local --value="\OC\Memcache\Memcached"
       php occ config:system:set memcache.locking --value="\OC\Memcache\Memcached"
-      php -r "require 'config/config.php'; \$CONFIG['memcached_servers'] = [['${globals.cache_host}', (int)${globals.cache_port}]]; \$config = '<?php' . PHP_EOL . PHP_EOL . '\$CONFIG = ' . var_export(\$CONFIG, true) . ';'; file_put_contents('config/config.php', \$config);"
+      php -r "require 'config/config.php'; \$CONFIG['memcache.local'] = '\\OC\\Memcache\\Memcached'; \$CONFIG['memcache.locking'] = '\\OC\\Memcache\\Memcached'; \$CONFIG['memcached_servers'] = [['${globals.cache_host}', (int)${globals.cache_port}]]; \$config = '<?php' . PHP_EOL . PHP_EOL . '\$CONFIG = ' . var_export(\$CONFIG, true) . ';'; file_put_contents('config/config.php', \$config);"
